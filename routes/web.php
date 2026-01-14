@@ -1,13 +1,35 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadImportController;
+use App\Http\Controllers\LeadController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/leads/upload', [LeadImportController::class, 'create'])->name('leads.upload.form');
-    Route::post('/leads/upload', [LeadImportController::class, 'store'])->name('leads.upload');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::middleware('auth')->group(function () {
+
+    // Upload leads
+    Route::get('/leads/upload', [LeadImportController::class, 'create'])
+        ->name('leads.upload.form');
+    Route::post('/leads/upload', [LeadImportController::class, 'store'])
+        ->name('leads.upload');
+
+    // View/search leads
+    Route::get('/leads', [LeadController::class, 'index'])
+        ->name('leads.index');
+});
+
+require __DIR__.'/auth.php';
