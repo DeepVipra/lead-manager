@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('country', ['US', 'Canada', 'UK', 'UAE', 'Others'])->nullable();
             $table->string('service')->nullable();
             $table->string('website')->nullable();
-            $table->string('reply')->nullable();
+            $table->text('reply')->nullable();
             $table->timestamps();
         });
 
