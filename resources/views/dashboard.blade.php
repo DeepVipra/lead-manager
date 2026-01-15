@@ -24,49 +24,79 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            {{-- Country-wise --}}
+            {{-- Country-wise Bar Chart --}}
             <div class="bg-white p-6 rounded shadow">
                 <h3 class="text-lg font-semibold mb-4">Leads by Country</h3>
-                <table class="w-full border">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border p-2">Country</th>
-                            <th class="border p-2">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($countryCounts as $row)
-                            <tr>
-                                <td class="border p-2">{{ $row->country ?? 'Unknown' }}</td>
-                                <td class="border p-2">{{ $row->total }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <canvas id="countryChart"></canvas>
             </div>
 
-            {{-- Service-wise --}}
+            {{-- Service-wise Bar Chart --}}
             <div class="bg-white p-6 rounded shadow">
                 <h3 class="text-lg font-semibold mb-4">Leads by Service</h3>
-                <table class="w-full border">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border p-2">Service</th>
-                            <th class="border p-2">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($serviceCounts as $row)
-                            <tr>
-                                <td class="border p-2">{{ $row->service ?? 'Unknown' }}</td>
-                                <td class="border p-2">{{ $row->total }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <canvas id="serviceChart"></canvas>
             </div>
 
         </div>
     </div>
-</x-app-layout>
 
+    {{-- Chart.js CDN --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // ---------------- COUNTRY BAR CHART ----------------
+        const countryLabels = @json($countryCounts->pluck('country'));
+        const countryData   = @json($countryCounts->pluck('total'));
+
+        new Chart(document.getElementById('countryChart'), {
+            type: 'bar',
+            data: {
+                labels: countryLabels,
+                datasets: [{
+                    label: 'Leads',
+                    data: countryData,
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 }
+                    }
+                }
+            }
+        });
+
+        // ---------------- SERVICE BAR CHART ----------------
+        const serviceLabels = @json($serviceCounts->pluck('service'));
+        const serviceData   = @json($serviceCounts->pluck('total'));
+
+        new Chart(document.getElementById('serviceChart'), {
+            type: 'bar',
+            data: {
+                labels: serviceLabels,
+                datasets: [{
+                    label: 'Leads',
+                    data: serviceData,
+                    backgroundColor: '#10b981'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 }
+                    }
+                }
+            }
+        });
+    </script>
+</x-app-layout>
