@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadImportController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,5 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/leads', [LeadController::class, 'index'])
         ->name('leads.index');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+});
+
 
 require __DIR__.'/auth.php';
