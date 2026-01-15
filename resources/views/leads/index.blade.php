@@ -7,52 +7,57 @@
 
     <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-        <form method="GET" class="mb-4 bg-white p-4 rounded shadow grid grid-cols-6 gap-4">
+        {{-- FILTERS --}}
+        <form method="GET" style="background:#fff;padding:16px;border-radius:6px;margin-bottom:16px;">
 
-            <input type="text" name="search"
-                   value="{{ request('search') }}"
-                   placeholder="Search email, client name, website"
-                   class="border p-2 col-span-2">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;">
 
-            <select name="country" class="border p-2">
-                <option value="">Country</option>
-                @foreach (['US','Canada','UK','UAE','Others'] as $country)
-                    <option value="{{ $country }}"
-                        @selected(request('country') === $country)>
-                        {{ $country }}
-                    </option>
-                @endforeach
-            </select>
+                <input type="text" name="search"
+                       value="{{ request('search') }}"
+                       placeholder="Search"
+                       style="padding:8px;border:1px solid #ccc;border-radius:4px;width:220px;">
 
-            <input type="text" name="service"
-                   placeholder="Service"
-                   value="{{ request('service') }}"
-                   class="border p-2">
+                <select name="country" style="padding:8px;border:1px solid #ccc;border-radius:4px;">
+                    <option value="">Country</option>
+                    @foreach (['US','Canada','UK','UAE','Others'] as $country)
+                        <option value="{{ $country }}"
+                            @selected(request('country') === $country)>
+                            {{ $country }}
+                        </option>
+                    @endforeach
+                </select>
 
-            <input type="text" name="reply"
-                   placeholder="Reply"
-                   value="{{ request('reply') }}"
-                   class="border p-2">
+                <input type="text" name="service"
+                       placeholder="Service"
+                       value="{{ request('service') }}"
+                       style="padding:8px;border:1px solid #ccc;border-radius:4px;">
 
-            <input type="text" name="month"
-                   placeholder="Month"
-                   value="{{ request('month') }}"
-                   class="border p-2">
+                <input type="date" name="from_date"
+                       value="{{ request('from_date') }}"
+                       style="padding:8px;border:1px solid #ccc;border-radius:4px;">
 
-            <input type="date" name="from_date"
-                   value="{{ request('from_date') }}"
-                   class="border p-2">
+                <input type="date" name="to_date"
+                       value="{{ request('to_date') }}"
+                       style="padding:8px;border:1px solid #ccc;border-radius:4px;">
 
-            <input type="date" name="to_date"
-                   value="{{ request('to_date') }}"
-                   class="border p-2">
+                <button type="submit"
+                        style="padding:8px 14px;background:#2563eb;color:#fff;border-radius:4px;border:none;">
+                    Apply Filters
+                </button>
 
-            <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded col-span-6">
-                Apply Filters
-            </button>
+            </div>
         </form>
 
+        {{-- 🔥 EXPORT BUTTON (FORCED VISIBILITY) --}}
+        <div style="margin-bottom:16px;text-align:right;">
+            <a href="{{ route('leads.export', request()->query()) }}"
+               style="display:inline-block;padding:10px 16px;background:#16a34a;color:#fff;
+                      border-radius:4px;text-decoration:none;font-weight:600;">
+                Export to Excel
+            </a>
+        </div>
+
+        {{-- LEADS TABLE --}}
         <div class="bg-white shadow rounded overflow-x-auto">
             <table class="min-w-full border-collapse">
                 <thead class="bg-gray-100">
